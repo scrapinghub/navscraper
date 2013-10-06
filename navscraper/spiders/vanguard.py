@@ -5,7 +5,7 @@ from scrapy.http import FormRequest, Request
 from scrapy.selector import HtmlXPathSelector
 from scrapy.spider import BaseSpider
 
-from navscraper.items import FundItem
+from navscraper.items import NavItem
 
 
 class VanguardSpider(BaseSpider):
@@ -43,7 +43,7 @@ class VanguardSpider(BaseSpider):
         params = response.meta['params']
         for fund_id in params['fund_ids']:
             meta = {
-                'item': FundItem(fund_id=fund_id),
+                'item': NavItem(fund_id=fund_id),
             }
             data = {
                 'FundId': fund_id,  # yes, first char is uppercase.

@@ -6,7 +6,7 @@
 from scrapy.item import Item, Field
 
 
-class FundItem(Item):
+class NavItem(Item):
     fund = Field()
     fund_id = Field()
     dates = Field()
