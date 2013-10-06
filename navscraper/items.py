@@ -5,7 +5,9 @@
 
 from scrapy.item import Item, Field
 
-class NavscraperItem(Item):
-    # define the fields for your item here like:
-    # name = Field()
-    pass
+
+class FundItem(Item):
+    fund = Field()
+    fund_id = Field()
+    dates = Field()
+    values = Field()
