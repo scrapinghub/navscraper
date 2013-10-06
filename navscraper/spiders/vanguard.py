@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from scrapy import log
 from scrapy.http import FormRequest, Request
@@ -64,9 +64,21 @@ class VanguardSpider(BaseSpider):
 
         if results:
             results = iter(results)
+            dates, values = zip(*zip(results, results))
             item = response.meta['item']
-            item['dates'], item['values'] = zip(*zip(results, results))
+            item.update({
+                'dates': map(self._parse_date, dates),
+                'values': map(self._parse_value, values),
+            })
             return item
         else:
             self.log("No results found {!r}".format(response), level=log.ERROR)
 
+    def _parse_date(self, date_str):
+        dt = datetime.strptime(date_str, self.date_format).date()
+        return dt.isoformat()
+
+    def _parse_value(self, value_str):
+        # TODO: this is specific for vangard. Better to have a generic value
+        # parser to handle other sites possible formats.
+        return float(value_str.replace('$', ''))
