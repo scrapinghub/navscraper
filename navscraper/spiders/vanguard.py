@@ -27,33 +27,37 @@ class VanguardSpider(BaseSpider):
 
     def start_requests(self):
         if self.fund_id:
-            yield Request(self.search_url, self.parse_form)
+            date_start, date_end = self._get_dates_period()
+            params = {
+                # support comma separated values
+                'fund_ids': self.fund_id.split(','),
+                'date_start': date_start,
+                'date_end': date_end,
+            }
+            yield Request(self.search_url, meta={'params': params},
+                          callback=self.parse_form)
         else:
             self.log("Argument 'fund_id' missing.", level=log.ERROR)
 
     def parse_form(self, response):
-        if not self.date_start:
-            self.date_start = date.today().replace(month=1, day=1) \
-                                  .strftime(self.date_format)
-        if not self.date_end:
-            self.date_end = date.today().strftime(self.date_format)
+        params = response.meta['params']
+        for fund_id in params['fund_ids']:
+            meta = {
+                'item': FundItem(fund_id=fund_id),
+            }
+            data = {
+                'FundId': fund_id,  # yes, first char is uppercase.
+                'fundName': fund_id,
+                'radiobutton2': '1',
+                'radio': '1',
+                'beginDate': params['date_start'],
+                'endDate': params['date_end'],
+                'results': 'get',
+            }
 
-        meta = {
-            'item': FundItem(fund_id=self.fund_id),
-        }
-        data = {
-            'FundId': self.fund_id,
-            'fundName': self.fund_id,
-            'radiobutton2': '1',
-            'radio': '1',
-            'beginDate': self.date_start,
-            'endDate': self.date_end,
-            'results': 'get',
-        }
-
-        return FormRequest.from_response(response, formname='FormNavigate',
-                                         formdata=data, meta=meta,
-                                         callback=self.parse_results)
+            yield FormRequest.from_response(
+                response, formname='FormNavigate', formdata=data, meta=meta,
+                callback=self.parse_results)
 
     def parse_results(self, response):
         hxs = HtmlXPathSelector(response)
@@ -82,3 +86,14 @@ class VanguardSpider(BaseSpider):
         # TODO: this is specific for vangard. Better to have a generic value
         # parser to handle other sites possible formats.
         return float(value_str.replace('$', ''))
+
+    def _get_dates_period(self):
+        if not self.date_start:
+            # default start: first day of this year
+            self.date_start = date.today().replace(month=1, day=1) \
+                                  .strftime(self.date_format)
+        if not self.date_end:
+            # default end: today
+            self.date_end = date.today().strftime(self.date_format)
+
+        return self.date_start, self.date_end
