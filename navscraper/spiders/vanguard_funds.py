@@ -18,6 +18,6 @@ class VanguardFundsSpider(BaseSpider):
         for row in rows:
             fl = FundLoader(response=response, selector=row)
             fl.add_xpath('id', './td[2]/a/@href', re=r'FundId=(\d+)')
-            fl.add_xpath('name', './td[2]/text()')
+            fl.add_xpath('name', './td[2]/a/text()')
             fl.add_xpath('symbol', './td[3]/text()')
             yield fl.load_item()
