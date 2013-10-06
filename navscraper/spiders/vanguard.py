@@ -76,7 +76,7 @@ class VanguardSpider(BaseSpider):
             })
             return item
         else:
-            self.log("No results found {!r}".format(response), level=log.ERROR)
+            self.log("No results found %r" % response, level=log.ERROR)
 
     def _parse_date(self, date_str):
         dt = datetime.strptime(date_str, self.date_format).date()
