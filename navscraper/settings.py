@@ -12,4 +12,4 @@ SPIDER_MODULES = ['navscraper.spiders']
 NEWSPIDER_MODULE = 'navscraper.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'navscraper (+http://www.yourdomain.com)'
+USER_AGENT = 'navscraper (+http://github.com/scrapinghub/navscraper)'
