@@ -62,7 +62,7 @@ class VanguardSpider(BaseSpider):
     def parse_results(self, response):
         hxs = HtmlXPathSelector(response)
         results = hxs.select(
-            '//tr[count(th) = 2 and th[1][text()="Date"]]'
+            '//tr[count(th) = 2 and th[1][text()="Date"]][1]'
             '/following-sibling::tr/td/text()'
         ).extract()
 
