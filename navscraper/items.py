@@ -4,7 +4,7 @@
 # http://doc.scrapy.org/topics/items.html
 
 from scrapy.contrib.loader import XPathItemLoader
-from scrapy.contrib.loader.processor import TakeFirst
+from scrapy.contrib.loader.processor import TakeFirst, Compose
 from scrapy.item import Item, Field
 
 
@@ -23,3 +23,4 @@ class NavItem(Item):
 class FundLoader(XPathItemLoader):
     default_item_class = FundItem
     default_output_processor = TakeFirst()
+    name_out = Compose(TakeFirst(), lambda s: s.strip())
