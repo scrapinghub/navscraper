@@ -10,6 +10,15 @@ from navscraper.items import NavItem
 
 class VanguardSpider(BaseSpider):
     """Vanguard.com ETF data scraper.
+
+    Arguments
+    ---------
+    fund_id : str
+        Fund's ID in Vanguard site.
+    date_start : str (default: first day of this year)
+        Start date in format: mm/dd/YY.
+    date_end : str (default: today)
+        End date in format: mm/dd/YY.
     """
     name = "vanguard"
     allowed_domains = ["vanguard.com"]
