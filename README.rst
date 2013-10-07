@@ -7,6 +7,9 @@ Exchange-Traded Funds available in public websites.
 
 NAVScraper is based on `Scrapy`_ framework and sponsored by `Scrapinghub`_.
 
+.. contents::
+  :backlinks: none
+
 ============
 Requirements
 ============
@@ -35,18 +38,24 @@ Listing available spiders:
 Vanguard spider
 ---------------
 
-Scraping funds:
+Scraping available funds:
 
 .. code-block:: bash
 
   $ scrapy crawl vanguard_funds
 
 Scraping data from one fund (using one ``fund_id`` value scraped in the
-previous  command):
+previous  command) for the current year:
 
 .. code-block:: bash
 
   $ scrapy crawl vanguard -a fund_id=0967
+
+Scraping data for a specific date range:
+
+.. code-block:: bash
+
+  $ scrapy crawl vanguard -a fund_id=0967 -a date_start=01/01/2012 -a date_end=01/30/2012
 
 Scraping data from multiple funds and storing the output in a file:
 
@@ -54,8 +63,30 @@ Scraping data from multiple funds and storing the output in a file:
 
   $ scrapy crawl vanguard -a fund_id=0951,0955,3184,0963,0936,0960 -o output.jl
 
-The extension ``.jl`` is used as convention to specify that the file contains one
-`JSON`_ object per line.
+.. note::
+  The extension ``.jl`` is used as convention to specify that the file contains
+  one `JSON`_ object per line.
+
+-----------------
+WisdomTree spider
+-----------------
+
+Scraping available funds:
+
+.. code-block:: bash
+
+  $ scrapy crawl wisdomtree_funds
+
+Scraping data from one fund or more funds:
+
+.. code-block:: bash
+
+  $ scrapy crawl wisdomtree -a fund_id=40,42 -o output.jl
+
+.. note::
+
+  This spider scrapes all history values as the site does not provide the
+  option to filter by date range.
 
 -------------------
 Plotting the output
