@@ -26,11 +26,12 @@ class WisdomtreeSpider(BaseSpider):
 
     def start_requests(self):
         if self.fund_id:
-            # The site does not support query by start/end date as already
-            # display all the history values.
-            meta = {'fund_id': self.fund_id}
-            url = self.history_url % meta
-            yield Request(url, meta=meta, callback=self.parse_history)
+            for fund_id in self.fund_id.split(','):
+                # The site does not support query by start/end date as already
+                # display all the history values.
+                meta = {'fund_id': fund_id}
+                url = self.history_url % meta
+                yield Request(url, meta=meta, callback=self.parse_history)
         else:
             self.log("Argument 'fund_id' missing.", level=log.ERROR)
 
